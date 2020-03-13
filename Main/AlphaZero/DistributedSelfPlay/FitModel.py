@@ -76,9 +76,7 @@ def loopingOracle(modelPath, useMultipleGPUs, gpuSettings, modelGeneration, inSt
     else:
         trainingModel = singleModel
 
-    trainingModel.fit(np.array(inStates), [np.array(replayEval), np.array(replayPolicy)],
-                      epochs=Hyperparameters.EPOCHS_PER_TRAINING, batch_size=Hyperparameters.MINI_BATCH_SIZE, verbose=2,
-                      shuffle=True)
+    trainingModel.fit([np.array(inStates), np.array(replayPolicy)], np.array(replayEval),epochs=Hyperparameters.EPOCHS_PER_TRAINING, batch_size=Hyperparameters.MINI_BATCH_SIZE, verbose=2, shuffle=True)
 
     singleModel.save(modelPath, overwrite=True)
     singleModel.save(Hyperparameters.MODELS_SAVE_PATH + str(modelGeneration + 1))
