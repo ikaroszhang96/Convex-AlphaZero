@@ -71,7 +71,7 @@ def createResidualNetwork(inputShape, filtersPerConv, convPerResidual, amountOfR
             z = keras.layers.LeakyReLU(alpha=0.1)(z)
             
         zs.append(z)
-        prevU = us[i] if i < nLayers else None
+        prevU = us[i] if i < (amountOfResidualBlocks - 1) else None
         prevZ = z
 
     # Evaluation Head
