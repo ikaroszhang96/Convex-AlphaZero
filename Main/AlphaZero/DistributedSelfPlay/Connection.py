@@ -1,0 +1,80 @@
+from Main.AlphaZero.DistributedSelfPlay import Constants as C
+
+CONNECTION_ID = 0
+
+'''
+Class used to setup and hold a connection between (Overlord - Remote Worker), and (Overlord - Trainer)
+All the messages are sent over a TCP connection to what is beleived a localhost port.
+The Overlord always acts as the TCP server and the Trainer & Remote Workers acts as clients
+
+If one of workers is on a different machine, a local port most be forwarded using a SSH tunnel.
+'''
+class Connection:
+
+    def __init__(self, ip=None, port=None, server=False):
+        global CONNECTION_ID
+        print("Ip: {}  Port: {}  BufferSize: {}  Server: {}".format(ip, port, C.BUFFER_SIZE, server))
+        self.data = b''
+        self.id = CONNECTION_ID
+        CONNECTION_ID += 1
+
+        if (server):
+            self._startServerConnection(ip, port)
+        else:
+            self._startClientConnection(ip, port)
+
+    def _startClientConnection(self, ip, port):
+        import socket
+
+        print("Connecting to server on port", str(port) + "...")
+        self.conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.conn.connect((ip, port))
+        print("Connected to server on port", str(port) + "!")
+
+    def _startServerConnection(self, ip, port):
+        import socket
+        print("Waiting for client on port", str(port) + "...")
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.bind((ip, port))
+        s.listen(1)
+        self.conn, addr = s.accept()
+        print("Connection established to port", str(port) + "!")
+
+    def readMessage(self):
+        import pickle
+
+        hasFileSize = False
+        fileSize = 0
+        while (True):
+            if (hasFileSize or len(self.data) >= C.HEADER_MSG_SIZE):
+
+                if (hasFileSize == False):
+                    fileSize = int.from_bytes(self.data[:C.HEADER_MSG_SIZE], C.HEADER_ENDIAN_TYPE)
+                    hasFileSize = True
+
+                if (len(self.data) >= fileSize + C.HEADER_MSG_SIZE):
+                    # Extract the message
+                    msg = self.data[C.HEADER_MSG_SIZE: C.HEADER_MSG_SIZE + fileSize]
+
+                    # Remove the message from the stored Q
+                    self.data = self.data[C.HEADER_MSG_SIZE + fileSize:]
+                    return pickle.loads(msg)
+
+                deltaSize = fileSize - len(self.data) + C.HEADER_MSG_SIZE
+                newData = self.conn.recv(deltaSize)
+                self.data += newData
+            else:
+                newData = self.conn.recv(C.BUFFER_SIZE)
+                self.data += newData
+
+    def _encodeMsg(self, content):
+        sizeInBytes = len(content).to_bytes(C.HEADER_MSG_SIZE, C.HEADER_ENDIAN_TYPE)
+        return sizeInBytes + content
+
+    def sendMessage(self, messageType, msg):
+        import pickle
+        outMsg = pickle.dumps((messageType, msg))
+        self.conn.sendall(self._encodeMsg(outMsg))
+
+    def close(self):
+        self.conn.close()
