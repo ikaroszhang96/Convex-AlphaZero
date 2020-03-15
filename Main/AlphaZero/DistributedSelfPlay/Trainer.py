@@ -107,7 +107,7 @@ def loopingTrainer(port, gpuSettings):
             dataProcessingTime = time.time() - t1
             print("Data preprocessing finished: {}".format(dataProcessingTime))
             print("Using LR:", keras.backend.get_value(trainingModel.optimizer.lr))
-            trainingModel.fit(np.array(s), [np.array(v), np.array(p)],
+            trainingModel.fit([np.array(s), np.array(p)], np.array(v),
                               epochs=Hyperparameters.EPOCHS_PER_TRAINING, batch_size=Hyperparameters.MINI_BATCH_SIZE,
                               verbose=2,
                               shuffle=True)

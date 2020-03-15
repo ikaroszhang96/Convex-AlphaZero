@@ -10,7 +10,7 @@ def _createBatchNormalizedConvBlock(inputNode, filters):
 
 def createResidualNetwork(inputShape, filtersPerConv, convPerResidual, amountOfResidualBlocks):
     inputLayer = keras.layers.Input(inputShape, name="InputLayer")
-    policy = keras.layers.Input((7,), name="convex")
+    policy = keras.layers.Input((7,), name="convexInputLayer")
     l2Reg = Hyperparameters.L2_REGULARIZATION
     Conv2D = keras.layers.Conv2D
     
