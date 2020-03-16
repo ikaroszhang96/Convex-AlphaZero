@@ -58,7 +58,7 @@ def createResidualNetwork(inputShape, filtersPerConv, convPerResidual, amountOfR
             z_add.append(z_zu)
         
         yu_u = keras.layers.Flatten()(prevU)
-        yu_u = keras.layers.Dense(7, use_bias=True, kernel_regularizer=regularizers.l2(0.01), bias_regularizer=keras.regularizers.l2(0.01), bias_init='Ones')(yu_u)
+        yu_u = keras.layers.Dense(7, use_bias=True, kernel_regularizer=keras.regularizers.l2(0.01), bias_regularizer=keras.regularizers.l2(0.01), bias_init='Ones')(yu_u)
         if i == (amountOfResidualBlocks-1):
             z_yu = keras.layers.Dense(1, use_bias=False, kernel_regularizer=keras.regularizers.l2(0.01))(keras.layers.Multiply([yu_u, y]))
         else:
