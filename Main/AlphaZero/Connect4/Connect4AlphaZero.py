@@ -21,8 +21,6 @@ def init(modelCounter=0):
         model = keras.models.load_model(Hyperparameters.MODELS_SAVE_PATH + str(modelCounter))
         # model = keras.models.load_model("../../../Z-Models/Model" + str(modelCounter))
     
-    global graph
-    graph = tf.get_default_graph()
     model.save(Hyperparameters.CURRENT_MODEL_PATH, overwrite=True)
     parallelModel = None if MachineSpecificSettings.AMOUNT_OF_GPUS <= 1 else NeuralNetworks.createMultipleGPUModel(
         model)
