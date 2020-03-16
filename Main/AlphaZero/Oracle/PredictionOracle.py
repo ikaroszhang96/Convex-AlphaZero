@@ -17,10 +17,12 @@ def runPredictionOracle(model, selfPlayPool, toOraclePipe, kerasBackend, tensorf
     K = kerasBackend
     tf = tensorflow
 
+    '''
     if (MachineSpecificSettings.IS_UNIX_MACHINE):
         _runOptimizedGraphOracle(model, selfPlayPool)
     else:
-        _runNormalKerasOracle(model, selfPlayPool)
+    '''
+    _runNormalKerasOracle(model, selfPlayPool)
 
     # _runUnbiasedOracle(selfPlayPool)
 
