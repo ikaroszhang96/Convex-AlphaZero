@@ -70,9 +70,8 @@ def _runNormalKerasOracle(model, selfPlayPool):
 
 
 def _predictWithNormalModel(states):
-    a = NORMAL_MODEL.predict([states])
-    K.clear_session()
-    return a
+    with graph.as_default():
+        return NORMAL_MODEL.predict([states])
 
 
 # ***** Prediction with unbiased values, AKA fake prediction without any network... *****
