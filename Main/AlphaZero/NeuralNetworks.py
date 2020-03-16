@@ -51,18 +51,22 @@ def createResidualNetwork(inputShape, filtersPerConv, convPerResidual, amountOfR
                               bias_regularizer=keras.regularizers.l2(0.01), bias_initializer=keras.initializers.Ones())(zu_u)
             
             if i == (amountOfResidualBlocks-1):
-                z_zu = keras.layers.Dense(1,use_bias=False, kernel_regularizer=keras.regularizers.l2(0.01))(keras.layers.Multiply([zu_u, prevZ]))
+                z_zu = keras.layers.Multiply([zu_u, prevZ])
+                z_zu = keras.layers.Dense(1,use_bias=False, kernel_regularizer=keras.regularizers.l2(0.01))(z_zu)
             else:
-                z_zu = keras.layers.Dense(7,use_bias=False, kernel_regularizer=keras.regularizers.l2(0.01))(keras.layers.Multiply([zu_u, prevZ]))
+                z_zu = keras.layers.Multiply([zu_u, prevZ])
+                z_zu = keras.layers.Dense(7,use_bias=False, kernel_regularizer=keras.regularizers.l2(0.01))(z_zu)
             z_zs.append(z_zu)
             z_add.append(z_zu)
         
         yu_u = keras.layers.Flatten()(prevU)
         yu_u = keras.layers.Dense(7, use_bias=True, kernel_regularizer=keras.regularizers.l2(0.01), bias_regularizer=keras.regularizers.l2(0.01), bias_initializer=keras.initializers.Ones())(yu_u)
         if i == (amountOfResidualBlocks-1):
-            z_yu = keras.layers.Dense(1, use_bias=False, kernel_regularizer=keras.regularizers.l2(0.01))(keras.layers.Multiply([yu_u, y]))
+            z_yu = keras.layers.Multiply([yu_u, y])
+            z_yu = keras.layers.Dense(1, use_bias=False, kernel_regularizer=keras.regularizers.l2(0.01))(z_yu)
         else:
-            z_yu = keras.layers.Dense(7, use_bias=False, kernel_regularizer=keras.regularizers.l2(0.01))(keras.layers.Multiply([yu_u, y]))
+            z_yu = keras.layers.Multiply([yu_u, y])
+            z_yu = keras.layers.Dense(7, use_bias=False, kernel_regularizer=keras.regularizers.l2(0.01))(z_yu)
         z_ys.append(z_yu)
         z_add.append(z_yu)
         
