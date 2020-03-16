@@ -63,6 +63,7 @@ def _flushAndAbortLocalWorkers(selfPlayPool):
 def _runNormalKerasOracle(model, selfPlayPool):
     global NORMAL_MODEL
     NORMAL_MODEL = model
+    global graph
     graph = tf.get_default_graph()
     _oracleLoop(_predictWithNormalModel, selfPlayPool)
 
@@ -71,7 +72,6 @@ def _runNormalKerasOracle(model, selfPlayPool):
 
 
 def _predictWithNormalModel(states):
-    global graph
     with graph.as_default():
         return NORMAL_MODEL.predict([states])
 
