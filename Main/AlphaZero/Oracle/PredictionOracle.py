@@ -16,12 +16,11 @@ def runPredictionOracle(model, selfPlayPool, toOraclePipe, kerasBackend, tensorf
     ORACLE_PIPE = toOraclePipe
     K = kerasBackend
     tf = tensorflow
-
-    '''
+'''
     if (MachineSpecificSettings.IS_UNIX_MACHINE):
         _runOptimizedGraphOracle(model, selfPlayPool)
     else:
-    '''
+'''
     _runNormalKerasOracle(model, selfPlayPool)
 
     # _runUnbiasedOracle(selfPlayPool)
@@ -66,12 +65,11 @@ def _runNormalKerasOracle(model, selfPlayPool):
     _oracleLoop(_predictWithNormalModel, selfPlayPool)
 
 
-#NORMAL_MODEL = None
+NORMAL_MODEL = None
 
 
 def _predictWithNormalModel(states):
-    with graph.as_default():
-        return NORMAL_MODEL.predict([states])
+    return NORMAL_MODEL.predict([states])
 
 
 # ***** Prediction with unbiased values, AKA fake prediction without any network... *****
@@ -92,3 +90,33 @@ def _predictWithUnbiasedValues(states):
     return [UNBIASED_EVAL[:amountOfStates], UNBIASED_POLICY[:amountOfStates]]
 
 
+# ***** Prediction with an optimized graph directly in tensorflow... *****
+OPTIMIZED_GRAPH = None
+INPUT_TENSOR = None
+VALUE_OUT = None
+POLICY_OUT = None
+
+
+def _runOptimizedGraphOracle(model, selfPlayPool):
+    global OPTIMIZED_GRAPH, VALUE_OUT, POLICY_OUT, INPUT_TENSOR
+
+    optiGraph, outputs = GraphOptimizer.createOptimizedGraph(model, K.get_session(), tf)
+    graph = tf.Graph()
+    with graph.as_default():
+        with tf.Session(config=tf.ConfigProto(gpu_options=tf.GPUOptions(per_process_gpu_memory_fraction=1))) as sess:
+            # read TensorRT model
+            trt_graph = optiGraph
+
+            # obtain the corresponding input-output tensor
+            tf.import_graph_def(trt_graph, name='')
+
+            INPUT_TENSOR = sess.graph.get_tensor_by_name('InputLayer:0')
+            VALUE_OUT = sess.graph.get_tensor_by_name('ValueOut/Sigmoid:0')
+            POLICY_OUT = sess.graph.get_tensor_by_name('PolicyOut/Softmax:0')
+
+            OPTIMIZED_GRAPH = sess
+            _oracleLoop(_predictWithOptimizedGraph, selfPlayPool)
+
+
+def _predictWithOptimizedGraph(states):
+    return OPTIMIZED_GRAPH.run([VALUE_OUT, POLICY_OUT], feed_dict={INPUT_TENSOR: np.array(states)})

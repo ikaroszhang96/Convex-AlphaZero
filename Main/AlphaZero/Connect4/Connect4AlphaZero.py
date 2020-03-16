@@ -6,7 +6,6 @@ from Main.Analysis.Connect4 import RuntimeAnalysis
 from Main.AlphaZero.Oracle import PredictionOracle, PreComputation
 import time
 import keras
-import tensorflow as tf
 
 
 # Creates the network, either from a saved file or from scratch.
@@ -20,9 +19,7 @@ def init(modelCounter=0):
     else:  # Load an older model and start from there
         model = keras.models.load_model(Hyperparameters.MODELS_SAVE_PATH + str(modelCounter))
         # model = keras.models.load_model("../../../Z-Models/Model" + str(modelCounter))
-    
-    global graph
-    graph = tf.get_default_graph()
+
     model.save(Hyperparameters.CURRENT_MODEL_PATH, overwrite=True)
     parallelModel = None if MachineSpecificSettings.AMOUNT_OF_GPUS <= 1 else NeuralNetworks.createMultipleGPUModel(
         model)
