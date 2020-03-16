@@ -63,8 +63,7 @@ def _flushAndAbortLocalWorkers(selfPlayPool):
 def _runNormalKerasOracle(model, selfPlayPool):
     global NORMAL_MODEL
     NORMAL_MODEL = model
-    print("test model...")
-    print(model.predict(np.zeros((1,6,7,5))))
+    graph = tf.get_default_graph()
     _oracleLoop(_predictWithNormalModel, selfPlayPool)
 
 
@@ -72,7 +71,9 @@ def _runNormalKerasOracle(model, selfPlayPool):
 
 
 def _predictWithNormalModel(states):
-    return NORMAL_MODEL.predict([states])
+    global graph
+    with graph.as_default():
+        return NORMAL_MODEL.predict([states])
 
 
 # ***** Prediction with unbiased values, AKA fake prediction without any network... *****
