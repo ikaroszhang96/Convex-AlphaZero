@@ -82,8 +82,6 @@ def createResidualNetwork(inputShape, filtersPerConv, convPerResidual, amountOfR
         
         if i < (amountOfResidualBlocks - 1):
             z = keras.layers.LeakyReLU(alpha=0.1)(z)
-        else:
-            z = keras.layers.Activation('sigmoid')
             
         zs.append(z)
         prevU = us[i] if i < (amountOfResidualBlocks - 1) else None
