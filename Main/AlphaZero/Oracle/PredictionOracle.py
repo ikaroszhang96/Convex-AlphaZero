@@ -63,6 +63,8 @@ def _flushAndAbortLocalWorkers(selfPlayPool):
 def _runNormalKerasOracle(model, selfPlayPool):
     global NORMAL_MODEL
     NORMAL_MODEL = model
+    print("test model...")
+    print(model.predict(np.zeros((7,6,5))))
     _oracleLoop(_predictWithNormalModel, selfPlayPool)
 
 
