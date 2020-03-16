@@ -109,4 +109,4 @@ def createMultipleGPUModel(model):
 def _compileRezNetModel(model):
     # optimizer = keras.optimizers.Adam()
     optimizer = keras.optimizers.SGD(lr=Hyperparameters.LEARNING_RATE, momentum=Hyperparameters.MOMENTUM)
-    model.compile(optimizer, ['mse', 'categorical_crossentropy'])
+    model.compile(optimizer, 'mse')
