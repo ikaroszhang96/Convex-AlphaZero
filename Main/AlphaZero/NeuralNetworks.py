@@ -90,7 +90,7 @@ def createResidualNetwork(inputShape, filtersPerConv, convPerResidual, amountOfR
 
 
     # Create Full Model
-    model = keras.Model(inputs = [inputLayer, policy], evalHead)
+    model = keras.Model(inputs = [inputLayer, policy], outputs = evalHead)
     _compileRezNetModel(model)
     print("Created Rez-Net model")
 
