@@ -48,7 +48,7 @@ def createResidualNetwork(inputShape, filtersPerConv, convPerResidual, amountOfR
             zu_u = keras.layers.Flatten()(prevU)
             zu_u = keras.layers.Dense(7, activation='relu',use_bias=True,
                               kernel_regularizer=keras.regularizers.l2(0.01),
-                              bias_regularizer=keras.regularizers.l2(0.01), bias_init='Ones')(zu_u)
+                              bias_regularizer=keras.regularizers.l2(0.01), bias_initializer=keras.initializers.Ones())(zu_u)
             
             if i == (amountOfResidualBlocks-1):
                 z_zu = keras.layers.Dense(1,use_bias=False, kernel_regularizer=keras.regularizers.l2(0.01))(keras.layers.Multiply([zu_u, prevZ]))
@@ -58,7 +58,7 @@ def createResidualNetwork(inputShape, filtersPerConv, convPerResidual, amountOfR
             z_add.append(z_zu)
         
         yu_u = keras.layers.Flatten()(prevU)
-        yu_u = keras.layers.Dense(7, use_bias=True, kernel_regularizer=keras.regularizers.l2(0.01), bias_regularizer=keras.regularizers.l2(0.01), bias_init='Ones')(yu_u)
+        yu_u = keras.layers.Dense(7, use_bias=True, kernel_regularizer=keras.regularizers.l2(0.01), bias_regularizer=keras.regularizers.l2(0.01), bias_initializer=keras.initializers.Ones())(yu_u)
         if i == (amountOfResidualBlocks-1):
             z_yu = keras.layers.Dense(1, use_bias=False, kernel_regularizer=keras.regularizers.l2(0.01))(keras.layers.Multiply([yu_u, y]))
         else:
@@ -68,9 +68,9 @@ def createResidualNetwork(inputShape, filtersPerConv, convPerResidual, amountOfR
         
         z_u = keras.layers.Flatten()(prevU)
         if i == (amountOfResidualBlocks-1):
-            z_u = keras.layers.Dense(1, use_bias=True, kernel_regularizer=keras.regularizers.l2(0.01), bias_regularizer=keras.regularizers.l2(0.01), bias_init='Zeros')(z_u)
+            z_u = keras.layers.Dense(1, use_bias=True, kernel_regularizer=keras.regularizers.l2(0.01), bias_regularizer=keras.regularizers.l2(0.01), bias_initializer=keras.initializers.Zeros())(z_u)
         else:
-            z_u = keras.layers.Dense(7, use_bias=True, kernel_regularizer=keras.regularizers.l2(0.01), bias_regularizer=keras.regularizers.l2(0.01), bias_init='Zeros')(z_u)
+            z_u = keras.layers.Dense(7, use_bias=True, kernel_regularizer=keras.regularizers.l2(0.01), bias_regularizer=keras.regularizers.l2(0.01), bias_initializer=keras.initializers.Zeros())(z_u)
         z_us.append(z_u)
         z_add.append(z_u)
         
