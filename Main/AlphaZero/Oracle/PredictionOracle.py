@@ -110,8 +110,8 @@ def _runOptimizedGraphOracle(model, selfPlayPool):
             tf.import_graph_def(trt_graph, name='')
 
             INPUT_TENSOR = sess.graph.get_tensor_by_name('InputLayer:0')
-            VALUE_OUT = sess.graph.get_tensor_by_name('add_39:0')
             POLICY_OUT = sess.graph.get_tensor_by_name('convexInputLayer:0')
+            VALUE_OUT = sess.graph.get_tensor_by_name('add_39:0')
 
             OPTIMIZED_GRAPH = sess
             _oracleLoop(_predictWithOptimizedGraph, selfPlayPool)
