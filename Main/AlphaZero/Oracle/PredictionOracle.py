@@ -108,6 +108,9 @@ def _runOptimizedGraphOracle(model, selfPlayPool):
 
             # obtain the corresponding input-output tensor
             tf.import_graph_def(trt_graph, name='')
+            
+            a = model.layers[0]
+            a.weights
 
             INPUT_TENSOR = sess.graph.get_tensor_by_name('InputLayer:0')
             POLICY_OUT = sess.graph.get_tensor_by_name('convexInputLayer:0')
