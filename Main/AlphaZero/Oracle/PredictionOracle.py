@@ -118,6 +118,7 @@ def _runOptimizedGraphOracle(model, selfPlayPool):
             POLICY_OUT = sess.graph.get_tensor_by_name('convexInputLayer:0')
             VALUE_OUT = sess.graph.get_tensor_by_name('ValueOut/Sigmoid:0')
             grad = tf.gradients(POLICY_OUT, VALUE_OUT)
+            print(INPUT_TENSOR,POLICY_OUT,VALUE_OUT,grad)
 
             OPTIMIZED_GRAPH = sess
             _oracleLoop(_predictWithOptimizedGraph, selfPlayPool)
