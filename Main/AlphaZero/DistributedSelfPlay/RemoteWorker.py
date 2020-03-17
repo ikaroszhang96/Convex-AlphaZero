@@ -37,6 +37,8 @@ def _selfPlayProc(overlordConnection, remoteWorkerID, modelAbsPath, MCTSIteratio
         # Init model, manager & Workers
         model = keras.models.load_model(modelAbsPath)
         model._make_predict_function()
+        global graph1
+        graph1 = tf.get_default_graph()
 
         computeTable = {}
         dataManager, selfPlayPool, toOraclePipe, endPipe = _initSelfPlay(overlordConnection, remoteWorkerID,
