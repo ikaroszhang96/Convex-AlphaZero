@@ -70,6 +70,11 @@ NORMAL_MODEL = None
 
 
 def _predictWithNormalModel(states):
+
+    output = NORMAL_MODEL.output
+    input = NORMAL_MODEL.input[1]
+    gradients = tf.gradients(output, input)
+    print(output,input,gradients)
     return NORMAL_MODEL.predict([states])
 
 
