@@ -122,5 +122,55 @@ def _runOptimizedGraphOracle(model, selfPlayPool):
 
 
 def _predictWithOptimizedGraph(states):
+
+    b1 = 0.9
+    b2 = 0.999
+    lam = 0.5
+    eps = 1e-8
+    alpha = 0.01
     
-    f,g=OPTIMIZED_GRAPH.run([VALUE_OUT,grad], feed_dict={INPUT_TENSOR: np.array(states), POLICY_OUT:np.array(policy)})
+    act = np.zeros((1,7))
+    m = np.zeros_like(act)
+    v = np.zeros_like(act)
+    b1t, b2t = 1., 1.
+    act_best, a_diff, f_best = [None]*3
+    
+    for i in range(1000):
+        f, g = OPTIMIZED_GRAPH.run([VALUE_OUT,grad], feed_dict={INPUT_TENSOR: np.array(states), POLICY_OUT:np.array(act)})
+        if i == 0:
+            act_best = act.copy()
+            f_best = f.copy()
+        else:
+            prev_act_best = act_best.copy()
+            I = (f < f_best)
+            act_best[I] = act[I]
+            f_best[I] = f[I]
+            a_diff_i = np.mean(np.linalg.norm(act_best - prev_act_best, axis=1))
+            a_diff = a_diff_i if a_diff is None else lam*a_diff + (1.-lam)*a_diff_i
+                # print(a_diff_i, a_diff, np.sum(f))
+            if a_diff < 1e-3 and i > 5:
+                print('  + Adam took {} iterations'.format(i))
+                f, g = OPTIMIZED_GRAPH.run([VALUE_OUT,grad], feed_dict={INPUT_TENSOR: np.array(states), POLICY_OUT:np.array(act_best)})
+                return -f,act_best
+
+        m = b1 * m + (1. - b1) * g
+        v = b2 * v + (1. - b2) * (g * g)
+        b1t *= b1
+        b2t *= b2
+        mhat = m/(1.-b1t)
+        vhat = v/(1.-b2t)
+
+        act -= alpha * mhat / (np.sqrt(v) + eps)
+            # act = np.clip(act, -1, 1)
+        act = np.clip(act, 0, 1)
+        act = softmax(act)
+        
+    print('  + Warning: Adam did not converge.')
+    f, g = OPTIMIZED_GRAPH.run([VALUE_OUT,grad], feed_dict={INPUT_TENSOR: np.array(states), POLICY_OUT:np.array(act)})
+    return -f,act
+
+
+def softmax(x):
+    exp_x = np.exp(x)
+    softmax_x = exp_x / np.sum(exp_x)
+    return softmax_x
