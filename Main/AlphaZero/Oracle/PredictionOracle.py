@@ -75,7 +75,7 @@ def _predictWithNormalModel(states):
     input = NORMAL_MODEL.input[1]
     gradients = tf.gradients(output, input)
     print(output,input,gradients)
-    return NORMAL_MODEL.predict([states])
+    #return NORMAL_MODEL.predict([states])
 
 
 # ***** Prediction with unbiased values, AKA fake prediction without any network... *****
