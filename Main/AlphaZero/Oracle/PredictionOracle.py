@@ -16,6 +16,7 @@ def runPredictionOracle(model, selfPlayPool, toOraclePipe, kerasBackend, tensorf
     ORACLE_PIPE = toOraclePipe
     K = kerasBackend
     tf = tensorflow
+    _runNormalKerasOracle(model, selfPlayPool)
 
 '''
     if (MachineSpecificSettings.IS_UNIX_MACHINE):
@@ -23,7 +24,6 @@ def runPredictionOracle(model, selfPlayPool, toOraclePipe, kerasBackend, tensorf
     else:
         _runNormalKerasOracle(model, selfPlayPool)
 '''
-    _runNormalKerasOracle(model, selfPlayPool)
     # _runUnbiasedOracle(selfPlayPool)
 
 
