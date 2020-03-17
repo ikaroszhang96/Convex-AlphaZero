@@ -72,10 +72,8 @@ NORMAL_MODEL = None
 
 
 def _predictWithNormalModel(states):
-    with graph.as_default():
-        grads = K.gradients(NORMAL_MODEL.output,NORMAL_MODEL.input[1])
-        a = NORMAL_MODEL.predict(x=[states,np.array([[1, 1, 1, 1, 1, 1, 1]])])
-    #func = K.function([NORMAL_MODEL.input[0],NORMAL_MODEL.input[1]],[NORMAL_MODEL.output,grads])
+    grads = K.gradients(NORMAL_MODEL.output,NORMAL_MODEL.input[1])
+    func = K.function([NORMAL_MODEL.input[0],NORMAL_MODEL.input[1]],[NORMAL_MODEL.output,grads])
         print(a)
     return NORMAL_MODEL.predict([states])
 
