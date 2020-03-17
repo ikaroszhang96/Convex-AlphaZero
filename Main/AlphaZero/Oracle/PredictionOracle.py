@@ -97,7 +97,7 @@ POLICY_OUT = None
 
 
 def _runOptimizedGraphOracle(model, selfPlayPool):
-    global OPTIMIZED_GRAPH, VALUE_OUT, POLICY_OUT, INPUT_TENSOR
+    global OPTIMIZED_GRAPH, VALUE_OUT, POLICY_OUT, INPUT_TENSOR, grad
 
     optiGraph, outputs = GraphOptimizer.createOptimizedGraph(model, K.get_session(), tf)
     graph = tf.Graph()
@@ -115,10 +115,12 @@ def _runOptimizedGraphOracle(model, selfPlayPool):
             INPUT_TENSOR = sess.graph.get_tensor_by_name('InputLayer:0')
             POLICY_OUT = sess.graph.get_tensor_by_name('convexInputLayer:0')
             VALUE_OUT = sess.graph.get_tensor_by_name('ValueOut/Sigmoid:0')
+            grad = tf.gradients(POLICY_OUT, VALUE_OUT)
 
             OPTIMIZED_GRAPH = sess
             _oracleLoop(_predictWithOptimizedGraph, selfPlayPool)
 
 
 def _predictWithOptimizedGraph(states):
-    return OPTIMIZED_GRAPH.run([VALUE_OUT, POLICY_OUT], feed_dict={INPUT_TENSOR: np.array(states)})
+    
+    f,g=OPTIMIZED_GRAPH.run([VALUE_OUT,grad], feed_dict={INPUT_TENSOR: np.array(states), POLICY_OUT:np.array(policy)})
