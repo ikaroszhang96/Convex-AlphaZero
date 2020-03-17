@@ -89,7 +89,7 @@ def _predictWithNormalModel(states):
     b1t, b2t = 1., 1.
     act_best, a_diff, f_best = [None]*3
     for i in range(50):
-       print(sess.run([VALUE_OUT,gradients], feed_dict={INPUT_TENSOR: np.array(states), POLICY_OUT:np.array(act)}))
+       print(NORMAL_MODEL.run([VALUE_OUT,gradients], feed_dict={INPUT_TENSOR: np.array(states), POLICY_OUT:np.array(act)}))
     #return NORMAL_MODEL.predict([states])
 
 
