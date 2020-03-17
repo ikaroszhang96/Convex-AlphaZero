@@ -35,10 +35,10 @@ def _selfPlayProc(overlordConnection, remoteWorkerID, modelAbsPath, MCTSIteratio
         MachineSpecificSettings.setupHyperparameters()
 
         # Init model, manager & Workers
-        model = keras.models.load_model(modelAbsPath)
-        model._make_predict_function()
         global graph
         graph = tf.get_default_graph()
+        model = keras.models.load_model(modelAbsPath)
+        model._make_predict_function()
         
         with graph.as_default():
 
