@@ -63,6 +63,7 @@ def _flushAndAbortLocalWorkers(selfPlayPool):
 def _runNormalKerasOracle(model, selfPlayPool):
     global NORMAL_MODEL
     NORMAL_MODEL = model
+    graph = tf.get_default_graph()
     _oracleLoop(_predictWithNormalModel, selfPlayPool)
 
 
@@ -70,10 +71,12 @@ NORMAL_MODEL = None
 
 
 def _predictWithNormalModel(states):
-    grads = K.gradients(NORMAL_MODEL.output,NORMAL_MODEL.input[1])
-    a = NORMAL_MODEL.predict(x=[states,np.array([[1, 1, 1, 1, 1, 1, 1]])])
+    global graph
+    with graph.as_default():
+        grads = K.gradients(NORMAL_MODEL.output,NORMAL_MODEL.input[1])
+        a = NORMAL_MODEL.predict(x=[states,np.array([[1, 1, 1, 1, 1, 1, 1]])])
     #func = K.function([NORMAL_MODEL.input[0],NORMAL_MODEL.input[1]],[NORMAL_MODEL.output,grads])
-    print(a)
+        print(a)
     return NORMAL_MODEL.predict([states])
 
 
