@@ -72,24 +72,25 @@ NORMAL_MODEL = None
 def _predictWithNormalModel(states):
 
     output = NORMAL_MODEL.output
-    input = NORMAL_MODEL.input[1]
+    stateinput = NORMAL_MODEL.input[0]
+    policyinput = NORMAL_MODEL.input[1]
     gradients = tf.gradients(output, input)
-    print(output,input,gradients)
+    print(output,stateinput,policyinput,gradients)
     
-    sess = tf.Session()
-    b1 = 0.9
-    b2 = 0.999
-    lam = 0.5
-    eps = 1e-8
-    alpha = 0.01
+    with tf.session() as sess:
+        b1 = 0.9
+        b2 = 0.999
+        lam = 0.5
+        eps = 1e-8
+        alpha = 0.01
        
-    act = np.zeros((1,7))
-    m = np.zeros_like(act)
-    v = np.zeros_like(act)
-    b1t, b2t = 1., 1.
-    act_best, a_diff, f_best = [None]*3
-    for i in range(50):
-       print(NORMAL_MODEL.run([VALUE_OUT,gradients], feed_dict={INPUT_TENSOR: np.array(states), POLICY_OUT:np.array(act)}))
+        act = np.zeros((1,7))
+        m = np.zeros_like(act)
+        v = np.zeros_like(act)
+        b1t, b2t = 1., 1.
+        act_best, a_diff, f_best = [None]*3
+        for i in range(3):
+            print(sess.run([output,gradients], feed_dict={INPUT_TENSOR: np.array(states), POLICY_OUT:np.array(act)}))
     #return NORMAL_MODEL.predict([states])
 
 
