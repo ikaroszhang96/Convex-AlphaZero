@@ -74,7 +74,7 @@ def _predictWithNormalModel(states):
     output = NORMAL_MODEL.output
     stateinput = NORMAL_MODEL.input[0]
     policyinput = NORMAL_MODEL.input[1]
-    gradients = tf.gradients(output, input)
+    gradients = tf.gradients(output, policyinput)
     print(output,stateinput,policyinput,gradients)
     
     with tf.session() as sess:
