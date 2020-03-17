@@ -4,6 +4,7 @@ from Main.AlphaZero.Oracle import PredictionOracle
 import multiprocessing as mp
 import os, time, gc
 
+global graph1
 
 def _initSelfPlay(overlordConnection, remoteWorkerID, computeTable):
     toOraclePipe = mp.Queue()
@@ -37,7 +38,6 @@ def _selfPlayProc(overlordConnection, remoteWorkerID, modelAbsPath, MCTSIteratio
         # Init model, manager & Workers
         model = keras.models.load_model(modelAbsPath)
         model._make_predict_function()
-        global graph1
         graph1 = tf.get_default_graph()
 
         computeTable = {}
