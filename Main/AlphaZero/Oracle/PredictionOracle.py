@@ -78,6 +78,7 @@ def _predictWithNormalModel(states):
     print(output,stateinput,policyinput,gradients)
     
     with tf.Session() as sess:
+        tf.global_variables_initializer().run()
         b1 = 0.9
         b2 = 0.999
         lam = 0.5
@@ -90,7 +91,7 @@ def _predictWithNormalModel(states):
         b1t, b2t = 1., 1.
         act_best, a_diff, f_best = [None]*3
         for i in range(3):
-            print(sess.run([output,gradients], feed_dict={INPUT_TENSOR: np.array(states), POLICY_OUT:np.array(act)}))
+            print(sess.run([output,gradients], feed_dict={stateinput: np.array(states), policyinput:np.array(act)}))
     #return NORMAL_MODEL.predict([states])
 
 
