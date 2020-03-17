@@ -1,7 +1,6 @@
 from Main.AlphaZero.DistributedSelfPlay import Constants as C
 from Main.AlphaZero.Oracle import GraphOptimizer, OracleCommands
 from Main import Hyperparameters, MachineSpecificSettings
-from Main.AlphaZero.DistributedSelfPlay import RemoteWorker as R
 
 # from keras import backend as K
 # import tensorflow as tf
@@ -71,12 +70,11 @@ NORMAL_MODEL = None
 
 
 def _predictWithNormalModel(states):
-    with R.graph1.as_default():
-        grads = K.gradients(NORMAL_MODEL.output,NORMAL_MODEL.input[1])
-        a = NORMAL_MODEL.predict([states],np.array([[1, 1, 1, 1, 1, 1, 1]]))
+    grads = K.gradients(NORMAL_MODEL.output,NORMAL_MODEL.input[1])
+    a = NORMAL_MODEL.predict([states],np.array([[1, 1, 1, 1, 1, 1, 1]]))
         #func = K.function([NORMAL_MODEL.input[0],NORMAL_MODEL.input[1]],[NORMAL_MODEL.output,grads])
-        print(a)
-    return NORMAL_MODEL.predict([states])
+    print(a)
+    return NORMAL_MODEL.predict([states],np.array([[1, 1, 1, 1, 1, 1, 1]]))
 
 
 # ***** Prediction with unbiased values, AKA fake prediction without any network... *****
