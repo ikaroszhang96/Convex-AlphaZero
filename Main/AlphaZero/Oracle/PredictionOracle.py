@@ -16,7 +16,7 @@ def runPredictionOracle(model, selfPlayPool, toOraclePipe, kerasBackend, tensorf
     ORACLE_PIPE = toOraclePipe
     K = kerasBackend
     tf = tensorflow
-    _runOptimizedGraphOracle(model, selfPlayPool)
+    _runNormalKerasOracle(model, selfPlayPool)
 
 '''
     if (MachineSpecificSettings.IS_UNIX_MACHINE):
@@ -70,6 +70,8 @@ NORMAL_MODEL = None
 
 
 def _predictWithNormalModel(states):
+    grads = K.gradients(NORMAL_MODEL.output,NORMAL_MODEL.input[1])
+    print grads
     return NORMAL_MODEL.predict([states])
 
 
@@ -117,7 +119,6 @@ def _runOptimizedGraphOracle(model, selfPlayPool):
             INPUT_TENSOR = sess.graph.get_tensor_by_name('InputLayer:0')
             POLICY_OUT = sess.graph.get_tensor_by_name('convexInputLayer:0')
             VALUE_OUT = sess.graph.get_tensor_by_name('ValueOut/Sigmoid:0')
-            grad = tf.gradients(POLICY_OUT, VALUE_OUT)
             print(INPUT_TENSOR,POLICY_OUT,VALUE_OUT,grad)
 
             OPTIMIZED_GRAPH = sess
