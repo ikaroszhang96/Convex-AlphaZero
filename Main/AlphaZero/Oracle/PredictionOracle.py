@@ -71,7 +71,7 @@ NORMAL_MODEL = None
 
 def _predictWithNormalModel(states):
     grads = K.gradients(NORMAL_MODEL.output,NORMAL_MODEL.input[1])
-    print grads
+    print(grads)
     return NORMAL_MODEL.predict([states])
 
 
