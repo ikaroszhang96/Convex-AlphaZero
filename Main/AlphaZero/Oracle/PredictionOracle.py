@@ -135,7 +135,9 @@ def _predictWithOptimizedGraph(states):
     b1t, b2t = 1., 1.
     act_best, a_diff, f_best = [None]*3
     
-    for i in range(1000):
+    print(OPTIMIZED_GRAPH.run([VALUE_OUT,grad], feed_dict={INPUT_TENSOR: np.array(states), POLICY_OUT:np.array(act)}))
+    '''
+    for i in range(50):
         f, g = OPTIMIZED_GRAPH.run([VALUE_OUT,grad], feed_dict={INPUT_TENSOR: np.array(states), POLICY_OUT:np.array(act)})
         if i == 0:
             act_best = act.copy()
@@ -168,6 +170,7 @@ def _predictWithOptimizedGraph(states):
     print('  + Warning: Adam did not converge.')
     f, g = OPTIMIZED_GRAPH.run([VALUE_OUT,grad], feed_dict={INPUT_TENSOR: np.array(states), POLICY_OUT:np.array(act)})
     return -f,act
+    '''
 
 
 def softmax(x):
