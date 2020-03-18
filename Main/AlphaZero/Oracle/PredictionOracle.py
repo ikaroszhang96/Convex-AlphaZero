@@ -103,6 +103,8 @@ def _predictWithNormalModel(states):
                 act_best = np.clip(act_best, 0, 1)
                 act_best = softmax(act_best)
                 return -f,act_best
+                
+        print(m,b1,g)
 
         m = b1 * m + (1. - b1) * g
         v = b2 * v + (1. - b2) * (g * g)
