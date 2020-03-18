@@ -74,8 +74,9 @@ def _predictWithNormalModel(states):
     #a = NORMAL_MODEL.predict([states,np.array([1, 1, 1, 1, 1, 1, 1])])
     sess = K.get_session()
     act = np.zeros((1,7))
-    grad = sess.run(grads,feed_dict={NORMAL_MODEL.input[0]:np.array(states), NORMAL_MODEL.input[1]:np.array(act)})
-    print(a,func)
+    for i in range(5):
+        grad = sess.run(grads,feed_dict={NORMAL_MODEL.input[0]:np.array(states), NORMAL_MODEL.input[1]:np.array(act)})
+        print(grad)
     return NORMAL_MODEL.predict([states],np.array([[1, 1, 1, 1, 1, 1, 1]]))
 
 
