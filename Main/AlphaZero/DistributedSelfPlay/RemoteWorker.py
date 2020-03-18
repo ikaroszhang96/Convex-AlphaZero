@@ -35,28 +35,23 @@ def _selfPlayProc(overlordConnection, remoteWorkerID, modelAbsPath, MCTSIteratio
         MachineSpecificSettings.setupHyperparameters()
 
         # Init model, manager & Workers
-        global graph
-        graph = tf.get_default_graph()
         
-        K.clear_session()
         model = keras.models.load_model(modelAbsPath)
         model._make_predict_function()
-        
-        with graph.as_default():
 
-            computeTable = {}
-            dataManager, selfPlayPool, toOraclePipe, endPipe = _initSelfPlay(overlordConnection, remoteWorkerID,
+        computeTable = {}
+        dataManager, selfPlayPool, toOraclePipe, endPipe = _initSelfPlay(overlordConnection, remoteWorkerID,
                                                                          computeTable)
-            print("Self-Play Workers Initialized!")
+        print("Self-Play Workers Initialized!")
 
-            # Start self-play
-            t1 = time.time()
-            selfPlayPool.start()
-            oracleThread = threading.Thread(target=PredictionOracle.runPredictionOracle,
+        # Start self-play
+        t1 = time.time()
+        selfPlayPool.start()
+        oracleThread = threading.Thread(target=PredictionOracle.runPredictionOracle,
                                         args=(model, selfPlayPool, toOraclePipe, K, tf)).start()
 
         # Wait to exit, either by oracle or Datamanager
-            print(endPipe.get())
+        print(endPipe.get())
 
         # Kill the remaining workers
         try:

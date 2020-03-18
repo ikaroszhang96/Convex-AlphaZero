@@ -92,7 +92,7 @@ def _predictWithNormalModel(states):
         else:
             prev_act_best = act_best.copy()
             I = (f < f_best)
-            print(I,act_best,act)
+            print(numpy.size(I),numpy.size(act_best),numpy.size(act))
             act_best[I] = act[I]
             f_best[I] = f[I]
             a_diff_i = np.mean(np.linalg.norm(act_best - prev_act_best, axis=1))
@@ -105,7 +105,6 @@ def _predictWithNormalModel(states):
                 act_best = softmax(act_best)
                 return -f,act_best
                 
-        print(m,b1,f,g)
 
         m = b1 * m + (1. - b1) * g
         v = b2 * v + (1. - b2) * (g * g)
