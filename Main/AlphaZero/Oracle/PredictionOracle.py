@@ -86,6 +86,7 @@ def _predictWithNormalModel(states):
     act_best, a_diff, f_best = [None]*3
     for i in range(50):
         f, g = sess.run([NORMAL_MODEL.output,grads[0]], feed_dict={NORMAL_MODEL.input[0]: np.array(states), NORMAL_MODEL.input[1]:np.array(act)})
+        '''
         if i == 0:
             act_best = act.copy()
             f_best = f.copy()
@@ -104,7 +105,7 @@ def _predictWithNormalModel(states):
                 act_best = np.clip(act_best, 0, 1)
                 act_best = softmax(act_best)
                 return -f,act_best
-                
+        '''
 
         m = b1 * m + (1. - b1) * g
         v = b2 * v + (1. - b2) * (g * g)
@@ -118,7 +119,7 @@ def _predictWithNormalModel(states):
         act = np.clip(act, 0, 1)
         act = softmax(act)
         
-    print('  + Warning: Adam did not converge.')
+    print('Adam Finished')
     f, g = sess.run([NORMAL_MODEL.output,grads[0]], feed_dict={NORMAL_MODEL.input[0]: np.array(states), NORMAL_MODEL.input[1]:np.array(act)})
     return -f,act
 
