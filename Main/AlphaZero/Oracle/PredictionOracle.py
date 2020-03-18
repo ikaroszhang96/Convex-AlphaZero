@@ -76,8 +76,8 @@ def _predictWithNormalModel(states):
     act = np.zeros((1,7))
     for i in range(5):
         grad,out = sess.run([grads,NORMAL_MODEL.output],feed_dict={NORMAL_MODEL.input[0]:np.array(states), NORMAL_MODEL.input[1]:np.array(act)})
-        print(grad,out)
-    return NORMAL_MODEL.predict([states],np.array([[1, 1, 1, 1, 1, 1, 1]]))
+        print(grad,out.size())
+    return out,grad
 
 
 # ***** Prediction with unbiased values, AKA fake prediction without any network... *****
