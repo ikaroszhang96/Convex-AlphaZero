@@ -86,13 +86,13 @@ def _predictWithNormalModel(states):
     act_best, a_diff, f_best = [None]*3
     for i in range(50):
         f, g = sess.run([NORMAL_MODEL.output,grads[0]], feed_dict={NORMAL_MODEL.input[0]: np.array(states), NORMAL_MODEL.input[1]:np.array(act)})
-        print(g)
         if i == 0:
             act_best = act.copy()
             f_best = f.copy()
         else:
             prev_act_best = act_best.copy()
             I = (f < f_best)
+            print(I,act_best,act)
             act_best[I] = act[I]
             f_best[I] = f[I]
             a_diff_i = np.mean(np.linalg.norm(act_best - prev_act_best, axis=1))
