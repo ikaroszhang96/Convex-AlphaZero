@@ -92,7 +92,7 @@ def _predictWithNormalModel(states):
         else:
             prev_act_best = act_best.copy()
             I = (f < f_best)
-            print(numpy.size(I),numpy.size(act_best),numpy.size(act))
+            print(np.size(I),np.size(act_best),np.size(act))
             act_best[I] = act[I]
             f_best[I] = f[I]
             a_diff_i = np.mean(np.linalg.norm(act_best - prev_act_best, axis=1))
