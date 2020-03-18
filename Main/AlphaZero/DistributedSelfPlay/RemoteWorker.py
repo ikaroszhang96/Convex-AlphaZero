@@ -37,6 +37,8 @@ def _selfPlayProc(overlordConnection, remoteWorkerID, modelAbsPath, MCTSIteratio
         # Init model, manager & Workers
         global graph
         graph = tf.get_default_graph()
+        
+        K.clear_session()
         model = keras.models.load_model(modelAbsPath)
         model._make_predict_function()
         

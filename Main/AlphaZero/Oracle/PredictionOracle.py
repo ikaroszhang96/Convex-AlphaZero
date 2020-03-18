@@ -72,7 +72,9 @@ NORMAL_MODEL = None
 def _predictWithNormalModel(states):
     grads = K.gradients(NORMAL_MODEL.output,NORMAL_MODEL.input[1])
     #a = NORMAL_MODEL.predict([states,np.array([1, 1, 1, 1, 1, 1, 1])])
-    func = K.function([NORMAL_MODEL.input[0],NORMAL_MODEL.input[1]],[NORMAL_MODEL.output,grads])
+    sess = K.get_session()
+    act = np.zeros((1,7))
+    grad = sess.run(grads,feed_dict={NORMAL_MODEL.input[0]=np.array(states), NORMAL_MODEL.input[1]:np.array(act)})
     print(a,func)
     return NORMAL_MODEL.predict([states],np.array([[1, 1, 1, 1, 1, 1, 1]]))
 
