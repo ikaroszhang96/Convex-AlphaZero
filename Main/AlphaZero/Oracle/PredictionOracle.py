@@ -79,7 +79,8 @@ def _predictWithNormalModel(states):
     eps = 1e-8
     alpha = 0.01
     
-    act = np.array([[1., 1., 1., 1., 1., 1., 1.]] * Hyperparameters.AMOUNT_OF_GAMES_PER_WORKER)
+    act = np.array([[1., 1., 1., 1., 1., 1., 1.]] * len(states))
+    print(len(states))
     m = np.zeros_like(act)
     v = np.zeros_like(act)
     b1t, b2t = 1., 1.
