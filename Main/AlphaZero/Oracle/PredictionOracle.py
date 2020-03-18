@@ -85,7 +85,7 @@ def _predictWithNormalModel(states):
     b1t, b2t = 1., 1.
     act_best, a_diff, f_best = [None]*3
     for i in range(50):
-        f, g = sess.run([NORMAL_MODEL.output,grad], feed_dict={NORMAL_MODEL.input[0]: np.array(states), NORMAL_MODEL.input[1]:np.array(act)})
+        f, g = sess.run([NORMAL_MODEL.output,grads], feed_dict={NORMAL_MODEL.input[0]: np.array(states), NORMAL_MODEL.input[1]:np.array(act)})
         if i == 0:
             act_best = act.copy()
             f_best = f.copy()
@@ -99,9 +99,9 @@ def _predictWithNormalModel(states):
                 # print(a_diff_i, a_diff, np.sum(f))
             if a_diff < 1e-3 and i > 5:
                 print('  + Adam took {} iterations'.format(i))
-                f, g = sess.run([NORMAL_MODEL.output,grad], feed_dict={NORMAL_MODEL.input[0]: np.array(states), NORMAL_MODEL.input[1]:np.array(act)})
-                act = np.clip(act, 0, 1)
-                act = softmax(act)
+                f, g = sess.run([NORMAL_MODEL.output,grads], feed_dict={NORMAL_MODEL.input[0]: np.array(states), NORMAL_MODEL.input[1]:np.array(act)})
+                act_best = np.clip(act_best, 0, 1)
+                act_best = softmax(act_best)
                 return -f,act_best
 
         m = b1 * m + (1. - b1) * g
@@ -117,7 +117,7 @@ def _predictWithNormalModel(states):
         act = softmax(act)
         
     print('  + Warning: Adam did not converge.')
-    f, g = sess.run([NORMAL_MODEL.output,grad], feed_dict={NORMAL_MODEL.input[0]: np.array(states), NORMAL_MODEL.input[1]:np.array(act)})
+    f, g = sess.run([NORMAL_MODEL.output,grads], feed_dict={NORMAL_MODEL.input[0]: np.array(states), NORMAL_MODEL.input[1]:np.array(act)})
     return -f,act
 
 
