@@ -79,7 +79,7 @@ def _predictWithNormalModel(states):
     eps = 1e-8
     alpha = 0.01
     
-    act = np.zeros((1,7))
+    act = np.zeros((50,7))
     m = np.zeros_like(act)
     v = np.zeros_like(act)
     b1t, b2t = 1., 1.
