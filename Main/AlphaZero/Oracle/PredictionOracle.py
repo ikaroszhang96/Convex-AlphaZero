@@ -79,13 +79,14 @@ def _predictWithNormalModel(states):
     eps = 1e-8
     alpha = 0.01
     
-    act = np.zeros((50,7))
+    act = np.array([[1, 1, 1, 1, 1, 1, 1]] * Hyperparameters.AMOUNT_OF_GAMES_PER_WORKER)
     m = np.zeros_like(act)
     v = np.zeros_like(act)
     b1t, b2t = 1., 1.
     act_best, a_diff, f_best = [None]*3
     for i in range(50):
         f, g = sess.run([NORMAL_MODEL.output,grads[0]], feed_dict={NORMAL_MODEL.input[0]: np.array(states), NORMAL_MODEL.input[1]:np.array(act)})
+        print(g)
         if i == 0:
             act_best = act.copy()
             f_best = f.copy()
